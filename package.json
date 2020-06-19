@@ -1,0 +1,56 @@
+{
+  "name": "timer-db",
+  "version": "0.0.1",
+  "description": "A library for cubing timer results storage with CouchDB-based synchronization.",
+  "types": "dist/types/timer-db.d.ts",
+  "main": "dist/main/timer-db.node.js",
+  "module": "dist/module/timer-db.module.js",
+  "browser": "dist/browser/timer-db.browser.js",
+  "scripts": {
+    "build": "npm run build-types && npm run build-main && npm run build-module && npm run build-browser",
+    "build-types": "npx parcel build --target types src/targets/types.ts",
+    "build-main": "npx parcel build --target main src/targets/main.ts",
+    "build-module": "npx parcel build --target module src/targets/module.ts",
+    "build-browser": "npx parcel build --target browser src/targets/browser.ts",
+    "dev": "npx parcel serve --port 3000 src/targets/dev/index.html",
+    "clean": "rm -rf ./.parcel-cache ./dist",
+    "prepack": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.cubing.net/timer-db"
+  },
+  "keywords": [
+    "cubing"
+  ],
+  "author": "github.com/cubing",
+  "license": "GPL-3.0-or-later",
+  "targets": {
+    "types": {},
+    "main": {
+      "context": "node",
+      "outputFormat": "commonjs"
+    },
+    "module": {
+      "outputFormat": "esmodule"
+    },
+    "browser": {
+      "outputFormat": "esmodule",
+      "includeNodeModules": true
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.0",
+    "@types/node": "^14.0.13",
+    "@types/pouchdb": "^6.4.0",
+    "jest": "^26.0.1",
+    "parcel": "^2.0.0-nightly.297",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "@collectable/red-black-tree": "^5.0.1",
+    "pouchdb": "^7.2.1",
+    "pouchdb-find": "^7.2.1"
+  }
+}

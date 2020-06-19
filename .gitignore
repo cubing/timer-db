@@ -1,0 +1,7 @@
+/.parcel-cache
+/dist
+/node_modules
+
+# TODO: Change config folder for testing.
+# https://stackoverflow.com/a/20092531
+/timer_db_default*
