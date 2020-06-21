@@ -1,15 +1,14 @@
 // https://www.npmjs.com/package/@collectable/red-black-tree
 import {
   fromPairsWithStringKeys,
-  Instance as RedBlackTreeStructure,
+  RedBlackTreeStructure,
   iterateFromFirst,
   iterateValuesFromLast,
   remove,
   set,
   size,
   valueAt,
-  iterateFromLast,
-} from "@collectable/red-black-tree/lib/es2015/RedBlackTree";
+} from "@collectable/red-black-tree";
 import { StoredAttempt } from "../data/Attempt";
 import { PouchDBStorage } from "./PouchDBStorage";
 import { AttemptUUID, SessionUUID } from "../UUID";
