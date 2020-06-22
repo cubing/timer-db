@@ -14,7 +14,7 @@ export class TimerDB {
   }
 
   // TODO: provide a way to get only sessions with solves.
-  async listSessions(): Promise<Session[]> {
+  async getSessions(): Promise<Session[]> {
     const sessionMetadataList = await this.pouch.getAllSessions();
     return sessionMetadataList.map(
       (sessionMetadata) => new Session(this.pouch, sessionMetadata)

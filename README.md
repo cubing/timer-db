@@ -10,7 +10,7 @@ You can use this with any CouchDB-compatible instance. Contact [Lucas Garron](ht
 import { TimerDB } from "timer-db";
 
 const timerDB = new TimerDB();
-const sessions = await timerDB.listSessions();
+const sessions = await timerDB.getSessions();
 
 // Use an existing session, or create a new one.
 const s: Session =

@@ -7,11 +7,11 @@ const db = new TimerDB();
 
 window.addEventListener("DOMContentLoaded", async () => {
   const timerDB = new TimerDB();
-  timerDB.startSync({
-    username: localStorage["timerDBUsername"],
-    password: localStorage["timerDBPassword"],
-  });
-  const sessions = await timerDB.listSessions();
+  // timerDB.startSync({
+  //   username: localStorage["timerDBUsername"],
+  //   password: localStorage["timerDBPassword"],
+  // });
+  const sessions = await timerDB.getSessions();
   const s: Session =
     sessions[0] ?? (await timerDB.createSession("My 4x4x4 Solves", "4x4x4"));
   s.addStatListener(console.log);
