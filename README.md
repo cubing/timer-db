@@ -1,8 +1,10 @@
 # `timer-db`
 
-A JavaScript cubing timer database, with robust support for working offline as well as syncing using [PouchDB](https://pouchdb.com/).
+A JavaScript cubing timer database, with:
 
-You can use this with any CouchDB-compatible instance. Contact [Lucas Garron](https://garron.net/) for an account with the test server!
+- An API designed for cubing timers.
+- Fast local storage (works offline).
+- Simple server sync (using [PouchDB](https://pouchdb.com/)).
 
 # Basic Usage
 
@@ -21,13 +23,18 @@ s.add({
   totalResultMs: 7080,
   unixDate: Date.now(),
 });
+```
 
-// Optional: sync with server.
+## Sync with Server
+
+```js
 timerDB.startSync({
   username: "[username]",
   password: "[password]",
 });
 ```
+
+You can use this with any CouchDB-compatible instance. There's a test server available; Contact [Lucas Garron](https://garron.net/) for an account!
 
 ## License
 
