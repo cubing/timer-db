@@ -39,7 +39,8 @@
     "browser-global": {
       "context": "browser",
       "isLibrary": true,
-      "outputFormat": "esmodule"
+      "outputFormat": "esmodule",
+      "includeNodeModules": true
     }
   },
   "devDependencies": {
