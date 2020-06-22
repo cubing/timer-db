@@ -4,7 +4,7 @@ import { PouchDBStorage } from "./storage/PouchDBStorage";
 import { StoredSessionMetadata, SessionMetadata } from "./data/SessionMetadata";
 import { SessionUUID } from "./UUID";
 import { mean, trimmedAverage, best, worst } from "./stats";
-import { argv } from "process";
+import { Storage } from "./storage/storage";
 
 interface StatSnapshot {
   latest100: StoredAttempt[]; // TODO: Use a more efficient way to pass this.
@@ -27,29 +27,29 @@ interface StatSnapshot {
 export type StatListener = (statsSnapshot: StatSnapshot) => void;
 
 export class Session implements SessionMetadata {
-  #pouch: PouchDBStorage;
+  #storage: Storage;
   #cache: AttemptCache;
   #metadata: StoredSessionMetadata;
   #statListeners: StatListener[] = [];
   name: string;
   event: string;
   _id: SessionUUID;
-  constructor(pouch: PouchDBStorage, metadata: StoredSessionMetadata) {
-    this.#pouch = pouch;
+  constructor(storage: Storage, metadata: StoredSessionMetadata) {
+    this.#storage = storage;
     this.#metadata = metadata;
     this.name = this.#metadata.name;
     this.event = this.#metadata.event;
     this._id = this.#metadata._id;
-    this.#cache = new AttemptCache(pouch, this.#metadata._id);
-    this.#pouch.addListener(this.onSyncChange.bind(this));
+    this.#cache = new AttemptCache(storage, this.#metadata._id);
+    this.#storage.addListener(this.onSyncChange.bind(this));
   }
 
   static async create(
-    pouch: PouchDBStorage,
+    storage: Storage,
     name: string,
     event: EventName
   ): Promise<Session> {
-    return new Session(pouch, await pouch.createSession({ name, event }));
+    return new Session(storage, await storage.createSession({ name, event }));
   }
 
   private async onSyncChange(attempts: StoredAttempt[]) {
@@ -104,7 +104,7 @@ export class Session implements SessionMetadata {
   // Modifies the attempt to add the ID and rev.
   async add(attempt: Attempt): Promise<StoredAttempt> {
     attempt.sessionID = this._id;
-    const storedAttempt = await this.#pouch.addNewAttempt(attempt);
+    const storedAttempt = await this.#storage.addNewAttempt(attempt);
     this.#cache.set(storedAttempt);
     await this.fireStatListeners();
     return storedAttempt;
@@ -112,14 +112,14 @@ export class Session implements SessionMetadata {
 
   async update(storedAttempt: StoredAttempt): Promise<void> {
     // TODO: handle session change.
-    this.#pouch.updateAttempt(storedAttempt);
+    this.#storage.updateAttempt(storedAttempt);
     this.#cache.set(storedAttempt);
     await this.fireStatListeners();
   }
 
   async delete(storedAttempt: StoredAttempt): Promise<void> {
     // We could use `Promise.all`, but we do these sequentially in case there was an error during delection.
-    await this.#pouch.deleteAttempt(storedAttempt);
+    await this.#storage.deleteAttempt(storedAttempt);
     await this.#cache.delete(storedAttempt._id);
     await this.fireStatListeners();
   }
@@ -136,13 +136,13 @@ export class Session implements SessionMetadata {
 
   // TODO: Use cache to keep track of this.
   async numAttempts(): Promise<number> {
-    return this.#pouch.sessionNumAttempts(this._id);
+    return this.#storage.sessionNumAttempts(this._id);
   }
 
   /******** Debug ********/
 
-  private async debugPouch(): Promise<PouchDBStorage> {
-    return this.#pouch;
+  private async debugPouch(): Promise<Storage> {
+    return this.#storage;
   }
 
   private async debugCache(): Promise<AttemptCache> {

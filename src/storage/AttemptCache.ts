@@ -12,6 +12,7 @@ import {
 import { StoredAttempt } from "../data/Attempt";
 import { PouchDBStorage } from "./PouchDBStorage";
 import { AttemptUUID, SessionUUID } from "../UUID";
+import { Storage } from "./storage";
 
 const MIN_SIZE_CAP = 1000;
 const MAX_SIZE_CAP = 1050;
@@ -23,7 +24,7 @@ type RedBlackTree = RedBlackTreeStructure<string, StoredAttempt>;
 export class AttemptCache {
   private latestSolves: Promise<RedBlackTree>;
   constructor(
-    private db: PouchDBStorage,
+    private storage: Storage,
     private sessionID: SessionUUID,
     private minSize: number = 100,
     private midSize: number = minSize + 25,
@@ -44,7 +45,7 @@ export class AttemptCache {
   /******** Functions that don't access `this.latestSolves`. ********/
 
   async getLatestFromDB(n: number): Promise<RedBlackTree> {
-    const attempts: StoredAttempt[] = await this.db.latestAttempts(
+    const attempts: StoredAttempt[] = await this.storage.latestAttempts(
       this.sessionID,
       n
     );

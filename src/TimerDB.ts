@@ -1,27 +1,28 @@
 import { EventName, StoredAttempt, Attempt } from "./data/Attempt";
 import { PouchDBStorage } from "./storage/PouchDBStorage";
 import { Session } from "./session";
+import { Storage } from "./storage/storage";
 
 export class TimerDB {
-  private pouch: PouchDBStorage;
+  private storage: Storage;
   constructor() {
-    this.pouch = new PouchDBStorage();
+    this.storage = new PouchDBStorage();
   }
 
   startSync(params: { username: string; password: string }): void {
-    this.pouch.connectRemoteDB(params.username, params.password);
+    this.storage.connectRemoteDB(params.username, params.password);
   }
 
   // TODO: provide a way to get only sessions with solves.
   async getSessions(): Promise<Session[]> {
-    const sessionMetadataList = await this.pouch.getAllSessions();
+    const sessionMetadataList = await this.storage.getAllSessions();
     return sessionMetadataList.map(
-      (sessionMetadata) => new Session(this.pouch, sessionMetadata)
+      (sessionMetadata) => new Session(this.storage, sessionMetadata)
     );
   }
 
   // TODO: `event: EventName`
   async createSession(sessionName: string, event: EventName): Promise<Session> {
-    return await Session.create(this.pouch, sessionName, event);
+    return await Session.create(this.storage, sessionName, event);
   }
 }
