@@ -8,21 +8,27 @@ A JavaScript cubing timer database, with:
 
 # Basic Usage
 
+Install with `npm install timer-db` and use like this:
+
 ```js
 import { TimerDB } from "timer-db";
 
-const timerDB = new TimerDB();
-const sessions = await timerDB.getSessions();
+async function demo() {
+  const timerDB = new TimerDB();
+  const sessions = await timerDB.getSessions();
 
-// Use an existing session, or create a new one.
-const s =
-  sessions[0] ?? (await timerDB.createSession("My 3x3x3 Solves", "3x3x3"));
+  // Use an existing session, or create a new one.
+  const s =
+    sessions[0] ?? (await timerDB.createSession("My 3x3x3 Solves", "3x3x3"));
 
-s.addStatListener(console.log);
-s.add({
-  totalResultMs: 7080,
-  unixDate: Date.now(),
-});
+  s.addStatListener(console.log);
+  s.add({
+    totalResultMs: 7080,
+    unixDate: Date.now(),
+  });
+}
+
+demo();
 ```
 
 ## Sync with Server
