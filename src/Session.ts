@@ -24,7 +24,7 @@ interface StatSnapshot {
   // TODO: include latest 100 attempts?
 }
 
-type StatListener = (statsSnapshot: StatSnapshot) => void;
+export type StatListener = (statsSnapshot: StatSnapshot) => void;
 
 export class Session implements SessionMetadata {
   #pouch: PouchDBStorage;
@@ -141,11 +141,11 @@ export class Session implements SessionMetadata {
 
   /******** Debug ********/
 
-  async debugPouch(): Promise<PouchDBStorage> {
+  private async debugPouch(): Promise<PouchDBStorage> {
     return this.#pouch;
   }
 
-  async debugCache(): Promise<AttemptCache> {
+  private async debugCache(): Promise<AttemptCache> {
     return this.#cache;
   }
 }

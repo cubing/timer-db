@@ -13,7 +13,7 @@ const timerDB = new TimerDB();
 const sessions = await timerDB.getSessions();
 
 // Use an existing session, or create a new one.
-const s: Session =
+const s =
   sessions[0] ?? (await timerDB.createSession("My 3x3x3 Solves", "3x3x3"));
 
 s.addStatListener(console.log);

@@ -1,7 +1,6 @@
 import { EventName, StoredAttempt, Attempt } from "./data/Attempt";
 import { PouchDBStorage } from "./storage/PouchDBStorage";
 import { Session } from "./session";
-import { newAttemptUUID } from "./UUID";
 
 export class TimerDB {
   private pouch: PouchDBStorage;

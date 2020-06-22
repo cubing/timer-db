@@ -27,9 +27,9 @@ export function isValidAttemptUUID(id: string): boolean {
   return attemptIDRegex.test(id);
 }
 
-export function newAttemptUUID(date: number): AttemptUUID {
+export async function newAttemptUUID(date: number): Promise<AttemptUUID> {
   const paddedDate = date.toString().padStart(14, "0");
-  const suffix = bufferToHex(getRandomValues(new Uint8Array(4)));
+  const suffix = bufferToHex(await getRandomValues(new Uint8Array(4)));
   const uuid = `${ATTEMPT_UUID_PREFIX}_${paddedDate}_${suffix}`;
   if (!isValidAttemptUUID(uuid)) {
     throw new Error(
@@ -51,8 +51,8 @@ function isValidSessionUUID(id: string): boolean {
   return sessionIDRegex.test(id);
 }
 
-export function newSessionUUID(name: string): SessionUUID {
-  const suffix = bufferToHex(getRandomValues(new Uint8Array(8)));
+export async function newSessionUUID(name: string): Promise<SessionUUID> {
+  const suffix = bufferToHex(await getRandomValues(new Uint8Array(8)));
   const uuid = `${SESSION_UUID_PREFIX}_${suffix}`;
   if (!isValidSessionUUID(uuid)) {
     throw new Error(
