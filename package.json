@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "build": "npx parcel build src/index.ts && npx parcel build --target browser-global src/targets/browser-global.ts"
+    "build": "npx parcel build --target main src/index.ts && npx parcel build --target types src/index.ts && npx parcel build --target browser-global src/targets/browser-global.ts"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.1",
