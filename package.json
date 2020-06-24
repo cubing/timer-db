@@ -50,7 +50,7 @@
     "@types/node": "^14.0.13",
     "@types/pouchdb": "^6.4.0",
     "jest": "^26.0.1",
-    "parcel": "^2.0.0-nightly.297",
+    "parcel": "^2.0.0-nightly.311",
     "ts-jest": "^26.1.0",
     "typescript": "^3.9.5"
   },
