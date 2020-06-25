@@ -1,3 +1,5 @@
+// This should be a `.d.ts` file, but we need to make it `.ts` (or Parcel won't include it in the output).
+
 import { AttemptUUID } from "../UUID";
 
 type AlgString = string;

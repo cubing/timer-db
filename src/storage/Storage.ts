@@ -1,3 +1,5 @@
+// This should be a `.d.ts` file, but we need to make it `.ts` (or Parcel won't include it in the output).
+
 import { StoredAttempt, Attempt } from "../data/Attempt";
 import {
   SessionMetadata,
@@ -7,7 +9,7 @@ import { SessionUUID } from "../UUID";
 
 export type SyncChangeListener = (attempt: StoredAttempt[]) => void;
 
-declare interface Storage {
+export declare interface Storage {
   connectRemoteDB(username: string, password: string): void;
 
   // Sessions

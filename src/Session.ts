@@ -1,10 +1,12 @@
+// This should be a `.d.ts` file, but we need to make it `.ts` (or Parcel won't include it in the output).
+
 import { AttemptCache } from "./storage/AttemptCache";
 import { Attempt, StoredAttempt, EventName } from "./data/Attempt";
 import { PouchDBStorage } from "./storage/PouchDBStorage";
 import { StoredSessionMetadata, SessionMetadata } from "./data/SessionMetadata";
 import { SessionUUID } from "./UUID";
 import { mean, trimmedAverage, best, worst } from "./stats";
-import { Storage } from "./storage/storage";
+import { Storage } from "./storage/Storage";
 
 interface StatSnapshot {
   latest100: StoredAttempt[]; // TODO: Use a more efficient way to pass this.

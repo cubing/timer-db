@@ -1,7 +1,7 @@
 import { EventName, StoredAttempt, Attempt } from "./data/Attempt";
 import { PouchDBStorage } from "./storage/PouchDBStorage";
 import { Session } from "./session";
-import { Storage } from "./storage/storage";
+import { Storage } from "./storage/Storage";
 
 export class TimerDB {
   private storage: Storage;
