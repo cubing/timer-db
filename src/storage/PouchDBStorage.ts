@@ -4,7 +4,7 @@ import { Attempt, StoredAttempt } from "../data/Attempt";
 import {
   SessionMetadata,
   StoredSessionMetadata,
-} from "../data/SessionMetadata.ts";
+} from "../data/SessionMetadata";
 import { newAttemptUUID, newSessionUUID, SessionUUID } from "../UUID";
 import {
   isValidAttemptData,
