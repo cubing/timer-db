@@ -66,6 +66,23 @@ export class Session implements SessionMetadata {
     this.fireStatListeners();
   }
 
+  async getStatSnapshot(): Promise<StatSnapshot> {
+    // TODO: Implement optimized data strctures for this.
+    const latest100 = await this.nMostRecent(100);
+    const latest12 = latest100.slice(0, 12);
+    const latest5 = latest100.slice(0, 5);
+    const latest3 = latest100.slice(0, 3);
+    return {
+      latest100,
+      mean3: latest3.length < 3 ? null : mean(latest3),
+      avg5: latest5.length < 5 ? null : trimmedAverage(latest5),
+      avg12: latest12.length < 12 ? null : trimmedAverage(latest12),
+      avg100: latest100.length < 100 ? null : trimmedAverage(latest100),
+      best100: best(latest100),
+      worst100: worst(latest100),
+    };
+  }
+
   addStatListener(listener: StatListener): void {
     this.#statListeners.push(listener);
   }
@@ -83,23 +100,10 @@ export class Session implements SessionMetadata {
   }
 
   private async fireStatListeners(): Promise<void> {
-    // TODO: Implement optimized data strctures for this.
     // TODO: avoid firing when none of the stats changed.
-    const latest100 = await this.nMostRecent(100);
-    const latest12 = latest100.slice(0, 12);
-    const latest5 = latest100.slice(0, 5);
-    const latest3 = latest100.slice(0, 3);
-    const stats: StatSnapshot = {
-      latest100,
-      mean3: latest3.length < 3 ? null : mean(latest3),
-      avg5: latest5.length < 5 ? null : trimmedAverage(latest5),
-      avg12: latest12.length < 12 ? null : trimmedAverage(latest12),
-      avg100: latest100.length < 100 ? null : trimmedAverage(latest100),
-      best100: best(latest100),
-      worst100: worst(latest100),
-    };
+    const statSnapshot = await this.getStatSnapshot();
     for (const listener of this.#statListeners) {
-      listener(stats);
+      listener(statSnapshot);
     }
   }
 
