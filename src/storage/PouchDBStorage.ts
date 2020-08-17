@@ -33,7 +33,7 @@ export class PouchDBStorage {
       index: { fields: ["sessionID"] }, // TODO
     });
     // this.localDB.createIndex({
-    //   index: { fields: ["totalResultMs"] }, // TODO
+    //   index: { fields: ["resultTotalMs"] }, // TODO
     // });
   }
 

@@ -1,7 +1,7 @@
 import { Attempt } from "./data/Attempt";
 
 function compareNumbers(a: Attempt, b: Attempt): number {
-  return a.totalResultMs - b.totalResultMs;
+  return a.resultTotalMs - b.resultTotalMs;
 }
 
 // TODO: handle DNFs
@@ -11,7 +11,7 @@ export function mean(attempts: Attempt[]): number | null {
   }
   var total = 0;
   for (const attempt of attempts) {
-    total += attempt.totalResultMs;
+    total += attempt.resultTotalMs;
   }
   return Math.round(total / attempts.length);
 }
@@ -37,7 +37,7 @@ export function best(attempts: Attempt[]): number | null {
   }
   return Math.min.apply(
     this,
-    attempts.map((attempt) => attempt.totalResultMs)
+    attempts.map((attempt) => attempt.resultTotalMs)
   );
 }
 
@@ -48,7 +48,7 @@ export function worst(attempts: Attempt[]): number | null {
   }
   return Math.max.apply(
     this,
-    attempts.map((attempt) => attempt.totalResultMs)
+    attempts.map((attempt) => attempt.resultTotalMs)
   );
 }
 
@@ -56,10 +56,10 @@ export function formatTime(
   attempt: Attempt,
   decimalDigits: 0 | 1 | 2 | 3 = 2
 ): string {
-  var hours = Math.floor(attempt.totalResultMs / (60 * 60 * 1000));
-  var minutes = Math.floor(attempt.totalResultMs / (60 * 1000)) % 60;
-  var seconds = Math.floor(attempt.totalResultMs / 1000) % 60;
-  var ms = Math.floor(attempt.totalResultMs % 1000);
+  var hours = Math.floor(attempt.resultTotalMs / (60 * 60 * 1000));
+  var minutes = Math.floor(attempt.resultTotalMs / (60 * 1000)) % 60;
+  var seconds = Math.floor(attempt.resultTotalMs / 1000) % 60;
+  var ms = Math.floor(attempt.resultTotalMs % 1000);
 
   let preDecimal: string;
   if (hours > 0) {

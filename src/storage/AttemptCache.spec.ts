@@ -9,7 +9,7 @@ function fakeAttempt(k: number): StoredAttempt {
   return {
     _id: newAttemptUUID(date),
     _rev: null, // TODO
-    totalResultMs: 100 + k,
+    resultTotalMs: 100 + k,
     unixDate: date,
   };
 }
@@ -22,7 +22,7 @@ test("should construct", async () => {
       await cache.set(fakeAttempt(4));
       await cache.set(fakeAttempt(1));
       await cache.set(fakeAttempt(7));
-      return (await cache.kthMostRecent(1)).totalResultMs;
+      return (await cache.kthMostRecent(1)).resultTotalMs;
     })()
   ).resolves.toBe(104);
 });
