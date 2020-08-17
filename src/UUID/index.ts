@@ -51,7 +51,7 @@ function isValidSessionUUID(id: string): boolean {
   return sessionIDRegex.test(id);
 }
 
-export async function newSessionUUID(name: string): Promise<SessionUUID> {
+export async function newSessionUUID(): Promise<SessionUUID> {
   const suffix = bufferToHex(await getRandomValues(new Uint8Array(8)));
   const uuid = `${SESSION_UUID_PREFIX}_${suffix}`;
   if (!isValidSessionUUID(uuid)) {

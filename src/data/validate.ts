@@ -29,7 +29,7 @@ export function isValidSessionMetadata(
   if (!("name" in sessionMetadata)) {
     return false;
   }
-  if (!("event" in sessionMetadata)) {
+  if (!("eventID" in sessionMetadata)) {
     return false;
   }
   return true;

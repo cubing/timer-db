@@ -136,7 +136,9 @@ export class PouchDBStorage {
       throw new Error("Attempted to store invalid attempt data");
     }
     const storedSessionMetadata = sessionMetadata as StoredSessionMetadata;
-    storedSessionMetadata._id = await newSessionUUID(sessionMetadata.name);
+    if (!storedSessionMetadata._id) {
+      storedSessionMetadata._id = await newSessionUUID();
+    }
     const response = await this.localDB.put(storedSessionMetadata);
     if (!response.ok) {
       throw new Error("Could not add attempt to session");

@@ -17,12 +17,16 @@ export class TimerDB {
   async getSessions(): Promise<Session[]> {
     const sessionMetadataList = await this.storage.getAllSessions();
     return sessionMetadataList.map(
-      (sessionMetadata) => new Session(this.storage, sessionMetadata)
+      (sessionMetadata) => new Session(this.storage, sessionMetadata, false)
     );
   }
 
   // TODO: `event: EventName`
-  async createSession(sessionName: string, event: EventName): Promise<Session> {
-    return await Session.create(this.storage, sessionName, event);
+  async createSession(
+    sessionName: string,
+    event: EventName,
+    stub: boolean = false
+  ): Promise<Session> {
+    return await Session.create(this.storage, sessionName, event, stub);
   }
 }

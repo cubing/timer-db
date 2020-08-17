@@ -7,18 +7,25 @@ const db = new TimerDB();
 
 window.addEventListener("DOMContentLoaded", async () => {
   const timerDB = new TimerDB();
-  // timerDB.startSync({
-  //   username: localStorage["timerDBUsername"],
-  //   password: localStorage["timerDBPassword"],
-  // });
+  timerDB.startSync({
+    username: localStorage["timerDBUsername"],
+    password: localStorage["timerDBPassword"],
+  });
   const sessions = await timerDB.getSessions();
   const s: Session =
     sessions[0] ?? (await timerDB.createSession("My 4x4x4 Solves", "4x4x4"));
   s.addStatListener(console.log);
-  s.add({
-    resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
-    unixDate: Date.now(),
-  });
+  // s.add({
+  //   resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
+  //   unixDate: Date.now(),
+  // });
+
+  const stubSesh = await timerDB.createSession("3x3x3 sesh!", "333", true);
+  // stubSesh.add({
+  //   resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
+  //   unixDate: Date.now(),
+  // });
+  console.log(stubSesh);
 
   // const s = (await db.listSessions())[0];
 

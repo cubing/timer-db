@@ -4,7 +4,7 @@ import { AttemptCache } from "./storage/AttemptCache";
 import { Attempt, StoredAttempt, EventName } from "./data/Attempt";
 import { PouchDBStorage } from "./storage/PouchDBStorage";
 import { StoredSessionMetadata, SessionMetadata } from "./data/SessionMetadata";
-import { SessionUUID } from "./UUID";
+import { SessionUUID, newSessionUUID } from "./UUID";
 import { mean, trimmedAverage, best, worst } from "./stats";
 import { Storage } from "./storage/Storage";
 
@@ -28,32 +28,62 @@ interface StatSnapshot {
 
 export type StatListener = (statsSnapshot: StatSnapshot) => void;
 
+interface StubSessionMetadata extends SessionMetadata {
+  _id: SessionUUID;
+}
+
 export class Session implements SessionMetadata {
   #storage: Storage;
   #cache: AttemptCache;
-  #metadata: StoredSessionMetadata;
+  #metadata: StubSessionMetadata | StoredSessionMetadata;
   #statListeners: StatListener[] = [];
-  name: string;
-  eventID: string;
-  _id: SessionUUID;
-  constructor(storage: Storage, metadata: StoredSessionMetadata) {
+  #unpersistedStub: boolean;
+  // A stub session is not created in the database until a result is added to it.
+  constructor(
+    storage: Storage,
+    metadata: StubSessionMetadata | StoredSessionMetadata,
+    stub: boolean = true
+  ) {
     this.#storage = storage;
     this.#metadata = metadata;
-    this.name = this.#metadata.name;
-    this.eventID = this.#metadata.eventID;
-    this._id = this.#metadata._id;
     this.#cache = new AttemptCache(storage, this.#metadata._id);
     this.#storage.addListener(this.onSyncChange.bind(this));
+    this.#unpersistedStub = stub;
+  }
+
+  get _id(): SessionUUID {
+    return this.#metadata._id;
+  }
+
+  get name(): SessionUUID {
+    return this.#metadata.name;
+  }
+
+  get eventID(): SessionUUID {
+    return this.#metadata.eventID;
   }
 
   static async create(
     storage: Storage,
     name: string,
-    event: EventName
+    event: EventName,
+    stub: boolean = false
   ): Promise<Session> {
+    if (stub) {
+      return new Session(
+        storage,
+        {
+          name,
+          eventID: event,
+          _id: await newSessionUUID(),
+        },
+        stub
+      );
+    }
     return new Session(
       storage,
-      await storage.createSession({ name, eventID: event })
+      await storage.createSession({ name, eventID: event }),
+      stub
     );
   }
 
@@ -110,8 +140,16 @@ export class Session implements SessionMetadata {
     }
   }
 
+  private async ensurePersisted(): Promise<void> {
+    if (this.#unpersistedStub) {
+      this.#metadata = await this.#storage.createSession(this.#metadata);
+      this.#unpersistedStub = false;
+    }
+  }
+
   // Modifies the attempt to add the ID and rev.
   async add(attempt: Attempt): Promise<StoredAttempt> {
+    this.ensurePersisted();
     attempt.sessionID = this._id;
     const storedAttempt = await this.#storage.addNewAttempt(attempt);
     this.#cache.set(storedAttempt);
@@ -120,6 +158,7 @@ export class Session implements SessionMetadata {
   }
 
   async update(storedAttempt: StoredAttempt): Promise<void> {
+    this.ensurePersisted();
     // TODO: handle session change.
     this.#storage.updateAttempt(storedAttempt);
     this.#cache.set(storedAttempt);
