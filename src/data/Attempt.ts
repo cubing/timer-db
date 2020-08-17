@@ -50,9 +50,14 @@ type PenaltyReason =
   | "misaligned" // https://www.worldcubeassociation.org/regulations/#10e3
   | "unknown-penalty";
 
+// TODO: `during-solve`?
+type PenaltyWhen = "pre-solve" | "post-solve";
+
 export interface Penalty {
   // Number of milliseconds that the penalty added to the result.
   // TODO: Represent DNF penalty. (And maybe DNS?)
   ms?: number;
   reason?: PenaltyReason;
+  // If `when` is not set, the default meaning is `post-solve`.
+  when?: PenaltyWhen;
 }
