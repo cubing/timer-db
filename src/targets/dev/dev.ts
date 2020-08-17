@@ -20,7 +20,9 @@ window.addEventListener("DOMContentLoaded", async () => {
   //   unixDate: Date.now(),
   // });
 
-  const stubSesh = await timerDB.createSession("3x3x3 sesh!", "333", true);
+  const stubSesh = await timerDB.createSession("3x3x3 sesh!", "333", {
+    stub: true,
+  });
   // stubSesh.add({
   //   resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
   //   unixDate: Date.now(),

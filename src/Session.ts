@@ -32,6 +32,10 @@ interface StubSessionMetadata extends SessionMetadata {
   _id: SessionUUID;
 }
 
+export interface SessionCreationOptions {
+  stub?: boolean;
+}
+
 export class Session implements SessionMetadata {
   #storage: Storage;
   #cache: AttemptCache;
@@ -39,16 +43,41 @@ export class Session implements SessionMetadata {
   #statListeners: StatListener[] = [];
   #unpersistedStub: boolean;
   // A stub session is not created in the database until a result is added to it.
+  // TODO: only expose the interface, but not this direct class?
   constructor(
     storage: Storage,
     metadata: StubSessionMetadata | StoredSessionMetadata,
-    stub: boolean = true
+    options: SessionCreationOptions = {}
   ) {
     this.#storage = storage;
     this.#metadata = metadata;
     this.#cache = new AttemptCache(storage, this.#metadata._id);
     this.#storage.addListener(this.onSyncChange.bind(this));
-    this.#unpersistedStub = stub;
+    this.#unpersistedStub = options?.stub ?? false;
+  }
+
+  static async create(
+    storage: Storage,
+    name: string,
+    event: EventName,
+    options?: SessionCreationOptions
+  ): Promise<Session> {
+    if (options?.stub) {
+      return new Session(
+        storage,
+        {
+          name,
+          eventID: event,
+          _id: await newSessionUUID(),
+        },
+        options
+      );
+    }
+    return new Session(
+      storage,
+      await storage.createSession({ name, eventID: event }),
+      options
+    );
   }
 
   get _id(): SessionUUID {
@@ -61,30 +90,6 @@ export class Session implements SessionMetadata {
 
   get eventID(): SessionUUID {
     return this.#metadata.eventID;
-  }
-
-  static async create(
-    storage: Storage,
-    name: string,
-    event: EventName,
-    stub: boolean = false
-  ): Promise<Session> {
-    if (stub) {
-      return new Session(
-        storage,
-        {
-          name,
-          eventID: event,
-          _id: await newSessionUUID(),
-        },
-        stub
-      );
-    }
-    return new Session(
-      storage,
-      await storage.createSession({ name, eventID: event }),
-      stub
-    );
   }
 
   private async onSyncChange(attempts: StoredAttempt[]) {

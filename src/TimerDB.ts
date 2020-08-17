@@ -1,6 +1,6 @@
 import { EventName, StoredAttempt, Attempt } from "./data/Attempt";
 import { PouchDBStorage } from "./storage/PouchDBStorage";
-import { Session } from "./session";
+import { Session, SessionCreationOptions } from "./session";
 import { Storage } from "./storage/Storage";
 
 export class TimerDB {
@@ -17,7 +17,7 @@ export class TimerDB {
   async getSessions(): Promise<Session[]> {
     const sessionMetadataList = await this.storage.getAllSessions();
     return sessionMetadataList.map(
-      (sessionMetadata) => new Session(this.storage, sessionMetadata, false)
+      (sessionMetadata) => new Session(this.storage, sessionMetadata)
     );
   }
 
@@ -25,8 +25,8 @@ export class TimerDB {
   async createSession(
     sessionName: string,
     event: EventName,
-    stub: boolean = false
+    options?: SessionCreationOptions
   ): Promise<Session> {
-    return await Session.create(this.storage, sessionName, event, stub);
+    return await Session.create(this.storage, sessionName, event, options);
   }
 }
