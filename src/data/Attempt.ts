@@ -15,9 +15,10 @@ type AttemptResultMs = number;
 // A *solve* is the portion of an attempt when the timer is running.
 export interface Attempt {
   // Total result *including* penalties, rounded to the nearest millisecond.
-  resultTotalMs: AttemptResultMs;
-  resultMoveCount: number;
-  resultMultiScore: number;
+  resultTotalMs?: AttemptResultMs;
+  // TODO: The following formats are not supported in code yet.
+  resultMoveCount?: number;
+  resultMultiScore?: number;
   // TODO: other results formats like FMC, multi blind. (Can these all be handled using "poins"?)
 
   // Unix date of the solve, in milliseconds.
