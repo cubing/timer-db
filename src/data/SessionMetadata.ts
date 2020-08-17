@@ -2,8 +2,8 @@ import { SessionUUID } from "../UUID";
 
 export interface SessionMetadata {
   name: string;
-  // How should we handle homogeneous sessions from older times?
-  event: string;
+  // TODO: How should we handle heterogeneous sessions from older times?
+  eventID: string;
 }
 
 export interface StoredSessionMetadata extends SessionMetadata {
