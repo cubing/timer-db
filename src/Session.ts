@@ -34,13 +34,13 @@ export class Session implements SessionMetadata {
   #metadata: StoredSessionMetadata;
   #statListeners: StatListener[] = [];
   name: string;
-  event: string;
+  eventID: string;
   _id: SessionUUID;
   constructor(storage: Storage, metadata: StoredSessionMetadata) {
     this.#storage = storage;
     this.#metadata = metadata;
     this.name = this.#metadata.name;
-    this.event = this.#metadata.event;
+    this.eventID = this.#metadata.eventID;
     this._id = this.#metadata._id;
     this.#cache = new AttemptCache(storage, this.#metadata._id);
     this.#storage.addListener(this.onSyncChange.bind(this));
@@ -51,7 +51,10 @@ export class Session implements SessionMetadata {
     name: string,
     event: EventName
   ): Promise<Session> {
-    return new Session(storage, await storage.createSession({ name, event }));
+    return new Session(
+      storage,
+      await storage.createSession({ name, eventID: event })
+    );
   }
 
   private async onSyncChange(attempts: StoredAttempt[]) {

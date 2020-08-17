@@ -15,7 +15,10 @@ type AttemptResultMs = number;
 // A *solve* is the portion of an attempt when the timer is running.
 export interface Attempt {
   // Total result *including* penalties, rounded to the nearest millisecond.
-  totalResultMs: AttemptResultMs;
+  resultTotalMs?: AttemptResultMs;
+  // TODO: The following formats are not supported in code yet.
+  resultMoveCount?: number;
+  resultMultiScore?: number;
   // TODO: other results formats like FMC, multi blind. (Can these all be handled using "poins"?)
 
   // Unix date of the solve, in milliseconds.
@@ -48,9 +51,14 @@ type PenaltyReason =
   | "misaligned" // https://www.worldcubeassociation.org/regulations/#10e3
   | "unknown-penalty";
 
+// TODO: `during-solve`?
+type PenaltyWhen = "pre-solve" | "post-solve";
+
 export interface Penalty {
   // Number of milliseconds that the penalty added to the result.
   // TODO: Represent DNF penalty. (And maybe DNS?)
   ms?: number;
   reason?: PenaltyReason;
+  // If `when` is not set, the default meaning is `post-solve`.
+  when?: PenaltyWhen;
 }

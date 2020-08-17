@@ -16,7 +16,7 @@ window.addEventListener("DOMContentLoaded", async () => {
     sessions[0] ?? (await timerDB.createSession("My 4x4x4 Solves", "4x4x4"));
   s.addStatListener(console.log);
   s.add({
-    totalResultMs: Math.floor(5000 + 10000 * Math.random()),
+    resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
     unixDate: Date.now(),
   });
 
@@ -44,7 +44,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   // const a = await c.kthMostRecent(0);
   // console.log(a);
-  // a.totalResultMs += 1;
+  // a.resultTotalMs += 1;
   // delete a.penalties;
   // s.update(a);
 });

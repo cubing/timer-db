@@ -23,7 +23,7 @@ async function demo() {
 
   s.addStatListener(console.log);
   s.add({
-    totalResultMs: 7080,
+    resultTotalMs: 7080,
     unixDate: Date.now(),
   });
 }

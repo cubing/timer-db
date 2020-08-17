@@ -100,7 +100,7 @@ export class AttemptCache {
     for (const entry of iterateFromFirst<string, StoredAttempt>(
       await this.latestSolves
     )) {
-      l.push([entry.key, entry.value.totalResultMs]);
+      l.push([entry.key, entry.value.resultTotalMs]);
     }
     console.table(l);
   }

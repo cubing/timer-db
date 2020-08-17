@@ -3,7 +3,7 @@ import { StoredSessionMetadata, SessionMetadata } from "./SessionMetadata";
 
 export function isValidAttemptData(attempt: Attempt): boolean {
   // We currently only support millisecond results.
-  if (!("totalResultMs" in attempt)) {
+  if (!("resultTotalMs" in attempt)) {
     return false;
   }
   return true;
