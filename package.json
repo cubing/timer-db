@@ -1,6 +1,6 @@
 {
   "name": "timer-db",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A library for cubing timer results storage with CouchDB-based synchronization.",
   "types": "dist/types/timer-db.d.ts",
   "main": "dist/main/timer-db.node.js",
