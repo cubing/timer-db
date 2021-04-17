@@ -8,7 +8,7 @@ import { SessionUUID, newSessionUUID } from "./UUID";
 import { mean, trimmedAverage, best, worst } from "./stats";
 import { Storage } from "./storage/Storage";
 
-interface StatSnapshot {
+export interface StatSnapshot {
   latest100: StoredAttempt[]; // TODO: Use a more efficient way to pass this.
   mean3: number | null;
   avg5: number | null;

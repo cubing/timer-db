@@ -30,11 +30,13 @@
     "main": {
       "context": "node",
       "isLibrary": true,
-      "outputFormat": "commonjs"
+      "outputFormat": "commonjs",
+      "minify": false
     },
     "module": {
       "isLibrary": true,
-      "outputFormat": "esmodule"
+      "outputFormat": "esmodule",
+      "minify": false
     },
     "browser-global": {
       "context": "browser",
