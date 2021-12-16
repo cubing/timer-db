@@ -1,3 +1,5 @@
+globalThis.global = globalThis;
+
 import { Session, TimerDB } from "../..";
 
 const db = new TimerDB();
