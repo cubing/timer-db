@@ -58,12 +58,12 @@
     "barely-a-dev-server": "^0.2.5",
     "jest": "^26.0.1",
     "parcel": "^2.0.0-nightly.311",
+    "pouchdb": "^7.2.2",
     "ts-jest": "^26.1.0",
     "typescript": "^3.9.5"
   },
   "dependencies": {
     "@collectable/red-black-tree": "^5.0.1",
-    "pouchdb": "^7.2.1",
     "pouchdb-find": "^7.2.1"
   }
 }
