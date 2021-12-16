@@ -1,11 +1,27 @@
-import { barelyServe } from "barely-a-dev-server";
+import { build } from "esbuild";
 
-barelyServe({
-  entryRoot: "src/targets/esm",
-  outDir: "dist",
-  port: 3000,
-  dev: false,
-  esbuildOptions: {
-    external: ["crypto", "pouchdb"],
-  },
+await build({
+  target: "es2020",
+  logLevel: "info",
+  minify: false,
+  sourcemap: true,
+  format: "esm",
+  entryPoints: ["./src/targets/esm/index.ts"],
+  outdir: "./dist/esm",
+  bundle: true,
+  splitting: true,
+  external: ["crypto"],
+});
+
+await build({
+  target: "es2020",
+  logLevel: "info",
+  minify: false,
+  sourcemap: true,
+  format: "esm",
+  entryPoints: ["./src/targets/bundle-global/timer-db.bundle-global.ts"],
+  outfile: "./dist/bundle-global/timer-db.bundle-global.js",
+  bundle: true,
+  splitting: false,
+  external: ["crypto"],
 });
