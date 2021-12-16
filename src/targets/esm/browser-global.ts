@@ -1,3 +1,3 @@
-import * as TimerDB from "..";
+import * as TimerDB from "./module";
 
 (globalThis as any).TimerDB = TimerDB;
