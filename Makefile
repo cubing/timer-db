@@ -2,7 +2,7 @@
 # https://github.com/lgarron/Makefile-scripts
 
 # Note: the first command becomes the default `make` target.
-NPM_COMMANDS = build build-types build-main build-module build-browser-global dev clean prepack
+NPM_COMMANDS = build build-types dev clean prepack
 
 .PHONY: $(NPM_COMMANDS)
 $(NPM_COMMANDS):
