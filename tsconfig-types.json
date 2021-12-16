@@ -6,6 +6,6 @@
     "rootDir": "src",
     "outDir": "dist/esm"
   },
-  "include": ["src/index.ts"],
+  "include": ["src/timer-db"],
   "exclude": ["*.spec.ts"]
 }
