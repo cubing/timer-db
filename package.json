@@ -4,8 +4,7 @@
   "description": "A library for cubing timer results storage with CouchDB-based synchronization.",
   "type": "module",
   "types": "dist/types/timer-db.d.ts",
-  "main": "dist/main/timer-db.node.js",
-  "module": "dist/module/timer-db.module.js",
+  "main": "dist/esm/index.js",
   "browser-global": "dist/browser-global/timer-db.browser-global.js",
   "scripts": {
     "build": "npm run build-types && npm run build-main && npm run build-module && npm run build-browser-global",
