@@ -1,13 +1,15 @@
-globalThis.global = globalThis;
+import type { Session } from "../..";
 
-import { Session, TimerDB } from "../..";
-
-const db = new TimerDB();
-(window as any).db = db;
-
-// db.createSession("3x3x3", "3x3x3");
+console.log("foo");
+(globalThis as any).global = globalThis;
+console.log(globalThis);
 
 window.addEventListener("DOMContentLoaded", async () => {
+  const { TimerDB } = await import("../..");
+
+  const db = new TimerDB();
+  (window as any).db = db;
+
   const timerDB = new TimerDB();
   timerDB.startSync({
     username: localStorage["timerDBUsername"],
