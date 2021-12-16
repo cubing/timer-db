@@ -1,8 +1,6 @@
-import type { Session } from "../..";
-
-console.log("foo");
 (globalThis as any).global = globalThis; // Nonsense for a transitive dependency of `pouchdb`.
-console.log(globalThis);
+
+import type { Session } from "../..";
 
 window.addEventListener("DOMContentLoaded", async () => {
   const { TimerDB } = await import("../..");
