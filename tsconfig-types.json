@@ -1,9 +1,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
     "removeComments": false,
     "rootDir": "src/timer-db",
-    "outDir": "dist/esm"
+    "outDir": "dist/types"
   },
   "include": ["src/timer-db"],
   "exclude": ["*.spec.ts", "node_modules"]
