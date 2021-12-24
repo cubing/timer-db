@@ -34,6 +34,10 @@ export interface Attempt {
   solution?: AlgString; // TODO
   penalties?: Penalty[]; // TODO
 
+  // simplified way of indicating Penalty, users must write their own penalty logic
+  // Ok = 0, +2 = 1, DNF = -1 (csTimer style)
+  penaltyCode?: number;
+
   device?: string;
 }
 

@@ -1,6 +1,6 @@
 import { EventName, StoredAttempt, Attempt } from "./data/Attempt";
 import { PouchDBStorage } from "./storage/PouchDBStorage";
-import { Session, SessionCreationOptions } from "./session";
+import { Session, SessionCreationOptions } from "./Session";
 import { Storage } from "./storage/Storage";
 
 export class TimerDB {
@@ -11,6 +11,11 @@ export class TimerDB {
 
   startSync(params: { username: string; password: string }): void {
     this.storage.connectRemoteDB(params.username, params.password);
+  }
+
+  // takes DB URL as a param
+  startSyncCustom(params: { dbURL: string, username: string; password: string }): void {
+    this.storage.connectRemoteDBCustom(params.dbURL, params.username, params.password);
   }
 
   // TODO: provide a way to get only sessions with solves.

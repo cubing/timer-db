@@ -11,6 +11,7 @@ export type SyncChangeListener = (attempt: StoredAttempt[]) => void;
 
 export declare interface Storage {
   connectRemoteDB(username: string, password: string): void;
+  connectRemoteDBCustom(dbURL: string, username: string, password: string): void;
 
   // Sessions
   createSession(
