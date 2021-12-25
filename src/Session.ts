@@ -192,12 +192,6 @@ export class Session implements SessionMetadata {
     return this.#storage.sessionNumAttempts(this._id);
   }
 
-  // function to get all attempts in a session. Can be very slow for large sessions
-  async getAllAttempts(): Promise<StoredAttempt[]> {
-    var totalSolves = await this.numAttempts();
-    return this.#cache.nMostRecent(totalSolves);
-  }
-
   /******** Debug ********/
 
   private async debugPouch(): Promise<Storage> {

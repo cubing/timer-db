@@ -9,13 +9,8 @@ export class TimerDB {
     this.storage = new PouchDBStorage();
   }
 
-  startSync(params: { username: string; password: string }): void {
-    this.storage.connectRemoteDB(params.username, params.password);
-  }
-
-  // takes DB URL as a param
-  startSyncCustom(params: { dbURL: string, username: string; password: string }): void {
-    this.storage.connectRemoteDBCustom(params.dbURL, params.username, params.password);
+  startSync(params: { username: string; password: string, options?: { dbURL: string } }): void {
+    this.storage.connectRemoteDB(params.username, params.password, params.options);
   }
 
   // TODO: provide a way to get only sessions with solves.

@@ -37,26 +37,9 @@ export class PouchDBStorage {
     // });
   }
 
-  connectRemoteDB(username: string, password: string): void {
-    const url = new URL(DB_URL);
-    url.username = username;
-    url.password = password;
-    url.pathname = `results-${localStorage.timerDBUsername}`;
-    const authedURL = url.toString();
-
-    this.remoteDB = new PouchDB(authedURL);
-
-    this.sync = this.localDB.sync(this.remoteDB, {
-      live: true,
-      retry: true,
-    });
-    this.sync.on("change", this.onSyncChange.bind(this));
-    this.sync.on("error", this.onSyncError.bind(this));
-  }
-
-  // takes DB URL as a param
-  connectRemoteDBCustom(dbURL: string, username: string, password: string): void {
-    const url = new URL(dbURL);
+  connectRemoteDB(username: string, password: string, options?: {dbURL: string}): void {
+    var tempURL = !(options === undefined) ? options.dbURL : DB_URL;
+    const url = new URL(tempURL);
     url.username = username;
     url.password = password;
     url.pathname = `results-${localStorage.timerDBUsername}`;
