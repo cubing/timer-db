@@ -11,7 +11,7 @@ import {
   isValidStoredSessionMetadata,
   isValidSessionMetadata,
 } from "../data/validate";
-import { SyncChangeListener } from "./storage";
+import { SyncChangeListener } from "./Storage";
 
 PouchDB.plugin(PouchDBFind);
 
@@ -37,8 +37,9 @@ export class PouchDBStorage {
     // });
   }
 
-  connectRemoteDB(username: string, password: string): void {
-    const url = new URL(DB_URL);
+  connectRemoteDB(username: string, password: string, options?: {dbURL: string}): void {
+    var tempURL = !(options === undefined) ? options.dbURL : DB_URL;
+    const url = new URL(tempURL);
     url.username = username;
     url.password = password;
     url.pathname = `results-${localStorage.timerDBUsername}`;

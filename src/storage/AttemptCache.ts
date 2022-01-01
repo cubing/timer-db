@@ -12,7 +12,7 @@ import {
 import { StoredAttempt } from "../data/Attempt";
 import { PouchDBStorage } from "./PouchDBStorage";
 import { AttemptUUID, SessionUUID } from "../UUID";
-import { Storage } from "./storage";
+import { Storage } from "./Storage";
 
 const MIN_SIZE_CAP = 1000;
 const MAX_SIZE_CAP = 1050;
