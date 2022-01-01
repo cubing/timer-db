@@ -34,10 +34,6 @@ export interface Attempt {
   solution?: AlgString; // TODO
   penalties?: Penalty[]; // TODO
 
-  // simplified way of indicating Penalty, users must write their own penalty logic
-  // Ok = 0, +2 = 1, DNF = -1 (csTimer style)
-  penaltyCode?: number;
-
   device?: string;
 }
 
@@ -57,12 +53,15 @@ type PenaltyReason =
 
 // TODO: `during-solve`?
 type PenaltyWhen = "pre-solve" | "post-solve";
+type PenaltyFailure = "DNF" | "DNS";
 
 export interface Penalty {
   // Number of milliseconds that the penalty added to the result.
   // TODO: Represent DNF penalty. (And maybe DNS?)
   ms?: number;
   reason?: PenaltyReason;
+  // represents if the penalty was a failure (DNF or DNS). Null means no failure
+  resultFailure?: PenaltyFailure;
   // If `when` is not set, the default meaning is `post-solve`.
   when?: PenaltyWhen;
 }
