@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@collectable/red-black-tree": "^5.0.1",
+    "events": "^3.3.0",
     "pouchdb-find": "^7.2.1"
   }
 }

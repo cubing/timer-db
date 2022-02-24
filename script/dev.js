@@ -5,5 +5,8 @@ barelyServe({
   port: 3000,
   esbuildOptions: {
     external: ["crypto"],
+    banner: {
+      js: `globalThis.global = globalThis;`,
+    },
   },
 });
