@@ -5,12 +5,11 @@
   "type": "module",
   "main": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
-  "browser-global": "dist/browser-global/timer-db.browser-global.js",
   "scripts": {
     "build": "node script/build.js && npm run build-types",
     "build-types": "npx tsc --build tsconfig-types.json",
     "dev": "node script/dev.js",
-    "clean": "rm -rf ./.parcel-cache ./dist",
+    "clean": "rm -rf./dist",
     "prepack": "npm run clean && npm run build"
   },
   "repository": {
@@ -22,25 +21,10 @@
   ],
   "author": "github.com/cubing",
   "license": "GPL-3.0-or-later",
-  "targets": {
-    "types": {},
-    "main": {
-      "context": "node",
-      "isLibrary": true,
-      "outputFormat": "commonjs",
-      "minify": false
-    },
-    "module": {
-      "isLibrary": true,
-      "outputFormat": "esmodule",
-      "minify": false
-    },
-    "browser-global": {
-      "context": "browser",
-      "isLibrary": true,
-      "outputFormat": "esmodule",
-      "includeNodeModules": true
-    }
+  "dependencies": {
+    "@collectable/red-black-tree": "^5.0.1",
+    "events": "^3.3.0",
+    "pouchdb-find": "^7.2.1"
   },
   "devDependencies": {
     "@types/node": "^14.0.13",
@@ -49,10 +33,5 @@
     "esbuild": "^0.14.5",
     "pouchdb": "^7.2.2",
     "typescript": "^3.9.5"
-  },
-  "dependencies": {
-    "@collectable/red-black-tree": "^5.0.1",
-    "events": "^3.3.0",
-    "pouchdb-find": "^7.2.1"
   }
 }
