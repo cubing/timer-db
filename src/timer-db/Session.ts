@@ -172,7 +172,7 @@ export class Session implements SessionMetadata {
   }
 
   async delete(storedAttempt: StoredAttempt): Promise<void> {
-    // We could use `Promise.all`, but we do these sequentially in case there was an error during delection.
+    // We could use `Promise.all`, but we do these sequentially in case there was an error during deletion.
     await this.#storage.deleteAttempt(storedAttempt);
     await this.#cache.delete(storedAttempt._id);
     await this.fireStatListeners();
