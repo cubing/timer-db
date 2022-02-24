@@ -9,7 +9,7 @@
     "build": "node script/build.js && npm run build-types",
     "build-types": "npx tsc --build tsconfig-types.json",
     "dev": "node script/dev.js",
-    "clean": "rm -rf./dist",
+    "clean": "rm -rf ./dist",
     "prepack": "npm run clean && npm run build"
   },
   "repository": {
