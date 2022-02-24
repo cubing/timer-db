@@ -6,7 +6,7 @@ async function nodeGetRandomValues(arr: Uint8Array): Promise<Uint8Array> {
       "The getRandomValues() shim only takes unsigned 32-bit int arrays"
     );
   }
-  var bytes = (await import("./crypto")).randomBytes(arr.length);
+  var bytes = (await import("crypto")).randomBytes(arr.length);
   arr.set(bytes);
   return arr;
 }
@@ -18,8 +18,5 @@ async function browserGetRandomValues(arr: Uint8Array): Promise<Uint8Array> {
 const inBrowser =
   typeof crypto !== "undefined" &&
   typeof crypto.getRandomValues !== "undefined";
-export const getRandomValues: (
-  arr: Uint8Array
-) => Promise<Uint8Array> = inBrowser
-  ? browserGetRandomValues
-  : nodeGetRandomValues;
+export const getRandomValues: (arr: Uint8Array) => Promise<Uint8Array> =
+  inBrowser ? browserGetRandomValues : nodeGetRandomValues;
