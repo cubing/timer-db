@@ -6,7 +6,7 @@ await build({
   minify: false,
   sourcemap: true,
   format: "esm",
-  entryPoints: ["./src/targets/esm/index.ts"],
+  entryPoints: ["./src/timer-db/index.ts"],
   outdir: "./dist/esm",
   bundle: true,
   splitting: true,

@@ -1,7 +1,7 @@
-import type { Session } from "../../timer-db";
+import type { Session } from "../timer-db";
 
 window.addEventListener("DOMContentLoaded", async () => {
-  const { TimerDB } = await import("../../timer-db");
+  const { TimerDB } = await import("../timer-db");
 
   const db = new TimerDB();
   (window as any).db = db;
