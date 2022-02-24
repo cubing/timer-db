@@ -6,7 +6,7 @@ barelyServe({
   esbuildOptions: {
     external: ["crypto"],
     banner: {
-      js: `globalThis.global = globalThis;`,
+      js: `globalThis.global = globalThis;`, // Workaround for some silly `pouchdb` dep.
     },
   },
 });

@@ -156,6 +156,7 @@ export class Session implements SessionMetadata {
   async add(attempt: Attempt): Promise<StoredAttempt> {
     this.ensurePersisted();
     attempt.sessionID = this._id;
+    attempt.resultTotalMs = Math.floor(attempt.resultTotalMs);
     const storedAttempt = await this.#storage.addNewAttempt(attempt);
     this.#cache.set(storedAttempt);
     await this.fireStatListeners();
