@@ -1,11 +1,11 @@
-import { Session, TimerDB } from "../..";
-
-const db = new TimerDB();
-(window as any).db = db;
-
-// db.createSession("3x3x3", "3x3x3");
+import type { Session } from "../../timer-db";
 
 window.addEventListener("DOMContentLoaded", async () => {
+  const { TimerDB } = await import("../../timer-db");
+
+  const db = new TimerDB();
+  (window as any).db = db;
+
   const timerDB = new TimerDB();
   timerDB.startSync({
     username: localStorage["timerDBUsername"],
@@ -20,20 +20,23 @@ window.addEventListener("DOMContentLoaded", async () => {
   //   unixDate: Date.now(),
   // });
 
-  const stubSesh = await timerDB.createSession("3x3x3 sesh!", "333", {
-    stub: true,
-  });
+  // const stubSesh = await timerDB.createSession("3x3x3 sesh!", "333", {
+  //   stub: true,
+  // });
   // stubSesh.add({
   //   resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
   //   unixDate: Date.now(),
   // });
-  console.log(stubSesh);
+  // console.log(stubSesh);
 
   // const s = (await db.listSessions())[0];
 
   // s.addStatListener(console.log);
 
-  // s.add(s.debugMakeAttempt(4));
+  // s.add({
+  //   resultTotalMs: 8000 + Math.floor(Math.random() * 4000),
+  //   unixDate: Date.now(),
+  // });
 
   // s.add(s.debugMakeAttempt(10));
 
@@ -41,7 +44,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   // s.add(s.debugMakeAttempt(5));
   // s.add(s.debugMakeAttempt(12));
 
-  // console.log(await s.nMostRecent(10));
+  console.log(await s.nMostRecent(10));
 
   // const p = await s.debugPouch();
   // console.log(await p.latestAttempts(s._id, 100));
