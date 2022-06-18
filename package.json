@@ -1,6 +1,6 @@
 {
   "name": "timer-db",
-  "version": "0.1.0-pre1",
+  "version": "0.1.0-pre2",
   "description": "A library for cubing timer results storage with CouchDB-based synchronization.",
   "type": "module",
   "main": "dist/esm/index.js",
