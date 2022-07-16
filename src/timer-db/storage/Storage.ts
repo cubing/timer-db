@@ -10,7 +10,7 @@ import { SessionUUID } from "../UUID";
 export type SyncChangeListener = (attempt: StoredAttempt[]) => void;
 
 export declare interface Storage {
-  connectRemoteDB(username: string, password: string): void;
+  connectRemoteDB(username: string, password: string, options?: {dbURL: string} ): void;
 
   // Sessions
   createSession(
