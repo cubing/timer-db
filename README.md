@@ -17,15 +17,21 @@ async function demo() {
   const timerDB = new TimerDB();
   const sessions = await timerDB.getSessions();
 
-  // Use an existing session, or create a new one.
-  const s =
-    sessions[0] ?? (await timerDB.createSession("My 3x3x3 Solves", "3x3x3"));
+  let s = sessions[0];
+  if (!s) {
+    // Initialize a session with example times.
+    s = await timerDB.createSession("My 3x3x3 Solves", "3x3x3");
+    s.addStatListener(console.log);
+    for (const exampleResultMilliseconds of [7080, 3130, 1113, 2295, 5660])
+      s.add({
+        resultTotalMs: exampleResultMilliseconds,
+        unixDate: Date.now(),
+      });
+  }
 
-  s.addStatListener(console.log);
-  s.add({
-    resultTotalMs: 7080,
-    unixDate: Date.now(),
-  });
+  console.log(
+    `Latest average of 5 in session: ${(await s.getStatSnapshot()).avg5}ms`,
+  );
 }
 
 demo();
