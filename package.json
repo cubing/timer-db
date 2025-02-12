@@ -29,8 +29,8 @@
   "devDependencies": {
     "@types/node": "^18.0.0",
     "@types/pouchdb": "^6.4.0",
-    "barely-a-dev-server": "^0.2.6",
-    "esbuild": "^0.14.45",
+    "barely-a-dev-server": "^0.7.1",
+    "esbuild": "^0.25.0",
     "pouchdb": "^7.3.0",
     "typescript": "^4.7.4"
   },
