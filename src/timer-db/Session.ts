@@ -1,12 +1,19 @@
 // This should be a `.d.ts` file, but we need to make it `.ts` (or Parcel won't include it in the output).
 
+import type {
+  Attempt,
+  AttemptWithResultTotalMs,
+  EventName,
+  StoredAttempt,
+} from "./data/Attempt";
+import type {
+  SessionMetadata,
+  StoredSessionMetadata,
+} from "./data/SessionMetadata";
+import { best, mean, trimmedAverage, worst } from "./stats";
 import { AttemptCache } from "./storage/AttemptCache";
-import { Attempt, StoredAttempt, EventName } from "./data/Attempt";
-import { PouchDBStorage } from "./storage/PouchDBStorage";
-import { StoredSessionMetadata, SessionMetadata } from "./data/SessionMetadata";
-import { SessionUUID, newSessionUUID } from "./UUID";
-import { mean, trimmedAverage, best, worst } from "./stats";
-import { Storage } from "./storage/Storage";
+import type { Storage } from "./storage/Storage";
+import { newSessionUUID, type SessionUUID } from "./UUID";
 
 export interface StatSnapshot {
   latest100: StoredAttempt[]; // TODO: Use a more efficient way to pass this.
@@ -47,7 +54,7 @@ export class Session implements SessionMetadata {
   constructor(
     storage: Storage,
     metadata: StubSessionMetadata | StoredSessionMetadata,
-    options: SessionCreationOptions = {}
+    options: SessionCreationOptions = {},
   ) {
     this.#storage = storage;
     this.#metadata = metadata;
@@ -60,7 +67,7 @@ export class Session implements SessionMetadata {
     storage: Storage,
     name: string,
     event: EventName,
-    options?: SessionCreationOptions
+    options?: SessionCreationOptions,
   ): Promise<Session> {
     if (options?.stub) {
       return new Session(
@@ -68,15 +75,15 @@ export class Session implements SessionMetadata {
         {
           name,
           eventID: event,
-          _id: await newSessionUUID(),
+          _id: newSessionUUID(),
         },
-        options
+        options,
       );
     }
     return new Session(
       storage,
       await storage.createSession({ name, eventID: event }),
-      options
+      options,
     );
   }
 
@@ -96,12 +103,13 @@ export class Session implements SessionMetadata {
     for (const attempt of attempts) {
       if (attempt._deleted || attempt.sessionID !== this._id) {
         await this.#cache.delete(attempt._id);
+        // biome-ignore lint/complexity/noUselessContinue: Future-proofing
         continue;
       } else {
         await this.#cache.set(attempt);
       }
     }
-    this.fireStatListeners();
+    void this.fireStatListeners();
   }
 
   async getStatSnapshot(): Promise<StatSnapshot> {
@@ -111,6 +119,7 @@ export class Session implements SessionMetadata {
     const latest5 = latest100.slice(0, 5);
     const latest3 = latest100.slice(0, 3);
     return {
+      // @ts-expect-error: TODO
       latest100,
       mean3: latest3.length < 3 ? null : mean(latest3),
       avg5: latest5.length < 5 ? null : trimmedAverage(latest5),
@@ -154,20 +163,22 @@ export class Session implements SessionMetadata {
 
   // Modifies the attempt to add the ID and rev.
   async add(attempt: Attempt): Promise<StoredAttempt> {
-    this.ensurePersisted();
+    await this.ensurePersisted();
     attempt.sessionID = this._id;
-    attempt.resultTotalMs = Math.floor(attempt.resultTotalMs);
+    if (attempt.resultTotalMs) {
+      attempt.resultTotalMs = Math.floor(attempt.resultTotalMs);
+    }
     const storedAttempt = await this.#storage.addNewAttempt(attempt);
-    this.#cache.set(storedAttempt);
+    await this.#cache.set(storedAttempt);
     await this.fireStatListeners();
     return storedAttempt;
   }
 
   async update(storedAttempt: StoredAttempt): Promise<void> {
-    this.ensurePersisted();
+    await this.ensurePersisted();
     // TODO: handle session change.
-    this.#storage.updateAttempt(storedAttempt);
-    this.#cache.set(storedAttempt);
+    await this.#storage.updateAttempt(storedAttempt);
+    await this.#cache.set(storedAttempt);
     await this.fireStatListeners();
   }
 
@@ -184,8 +195,9 @@ export class Session implements SessionMetadata {
 
   // TODO: handle cap limits.
   // TODO: Return iterator?
-  async nMostRecent(n: number): Promise<StoredAttempt[]> {
-    return this.#cache.nMostRecent(n);
+  async nMostRecent(n: number): Promise<AttemptWithResultTotalMs[]> {
+    // @ts-expect-error TODO
+    return this.#cache.nMostRecent(n) as AttemptWithResultTotalMs[];
   }
 
   // TODO: Use cache to keep track of this.
@@ -195,11 +207,11 @@ export class Session implements SessionMetadata {
 
   /******** Debug ********/
 
-  private async debugPouch(): Promise<Storage> {
-    return this.#storage;
-  }
+  // private async debugPouch(): Promise<Storage> {
+  //   return this.#storage;
+  // }
 
-  private async debugCache(): Promise<AttemptCache> {
-    return this.#cache;
-  }
+  // private async debugCache(): Promise<AttemptCache> {
+  //   return this.#cache;
+  // }
 }

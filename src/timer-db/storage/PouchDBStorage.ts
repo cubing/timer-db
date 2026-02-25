@@ -1,17 +1,20 @@
-import PouchDB, { emit } from "pouchdb";
+import PouchDB from "pouchdb";
 import PouchDBFind from "pouchdb-find";
-import { Attempt, StoredAttempt } from "../data/Attempt";
-import {
+import type { Attempt, StoredAttempt } from "../data/Attempt";
+import type {
   SessionMetadata,
   StoredSessionMetadata,
 } from "../data/SessionMetadata";
-import { newAttemptUUID, newSessionUUID, SessionUUID } from "../UUID";
 import {
   isValidAttemptData,
-  isValidStoredSessionMetadata,
   isValidSessionMetadata,
+  isValidStoredSessionMetadata,
 } from "../data/validate";
-import { SyncChangeListener } from "./storage";
+import { newAttemptUUID, newSessionUUID, type SessionUUID } from "../UUID";
+import type { SyncChangeListener } from "./Storage";
+
+export const LOCALSTORAGE_KEY_FOR_TIMER_DB_PASSWORD = "pouchDBPassword";
+export const LOCALSTORAGE_KEY_FOR_TIMER_DB_USERNAME = "pouchDBUsername";
 
 PouchDB.plugin(PouchDBFind);
 
@@ -23,7 +26,7 @@ type PouchDocument = Attempt | SessionMetadata;
 export class PouchDBStorage {
   // TODO: Change back to private fields once we figure out how to make it compatible with jest.
   private localDB: PouchDB.Database<PouchDocument>;
-  private remoteDB?: PouchDB.Database<PouchDocument> = null;
+  private remoteDB?: PouchDB.Database<PouchDocument> = undefined;
   private sync?: PouchDB.Replication.Sync<PouchDocument>;
   private listeners: SyncChangeListener[] = [];
   constructor() {
@@ -41,7 +44,7 @@ export class PouchDBStorage {
     const url = new URL(DB_URL);
     url.username = username;
     url.password = password;
-    url.pathname = `results-${localStorage.timerDBUsername}`;
+    url.pathname = `results-${localStorage[LOCALSTORAGE_KEY_FOR_TIMER_DB_USERNAME]}`;
     const authedURL = url.toString();
 
     this.remoteDB = new PouchDB(authedURL);
@@ -50,7 +53,9 @@ export class PouchDBStorage {
       live: true,
       retry: true,
     });
+    // @ts-expect-error: Broken types?
     this.sync.on("change", this.onSyncChange.bind(this));
+    // @ts-expect-error: Broken types?
     this.sync.on("error", this.onSyncError.bind(this));
   }
 
@@ -68,7 +73,7 @@ export class PouchDBStorage {
       }
     }
     throw new Error(
-      "Tried to remove a sync change listener that wasn't registered!"
+      "Tried to remove a sync change listener that wasn't registered!",
     );
   }
 
@@ -88,7 +93,7 @@ export class PouchDBStorage {
       throw new Error("Attempted to store invalid attempt data");
     }
     const storedAttempt = attempt as StoredAttempt;
-    storedAttempt._id = await newAttemptUUID(attempt.unixDate);
+    storedAttempt._id = newAttemptUUID(attempt.unixDate);
     const response = await this.localDB.put(storedAttempt);
     if (!response.ok) {
       throw new Error("Could not add attempt to session");
@@ -112,7 +117,7 @@ export class PouchDBStorage {
   // TODO: Replace iteratore
   async latestAttempts(
     sessionID: SessionUUID,
-    n: number
+    n: number,
   ): Promise<StoredAttempt[]> {
     const dbResponse = (await this.localDB.find({
       limit: n,
@@ -130,14 +135,14 @@ export class PouchDBStorage {
   }
 
   async createSession(
-    sessionMetadata: SessionMetadata
+    sessionMetadata: SessionMetadata,
   ): Promise<StoredSessionMetadata> {
     if (!isValidSessionMetadata(sessionMetadata)) {
       throw new Error("Attempted to store invalid attempt data");
     }
     const storedSessionMetadata = sessionMetadata as StoredSessionMetadata;
     if (!storedSessionMetadata._id) {
-      storedSessionMetadata._id = await newSessionUUID();
+      storedSessionMetadata._id = newSessionUUID();
     }
     const response = await this.localDB.put(storedSessionMetadata);
     if (!response.ok) {
@@ -154,7 +159,8 @@ export class PouchDBStorage {
       endkey: "s_\ufff0",
     })) as PouchDB.Core.AllDocsResponse<StoredSessionMetadata>;
     return dbResponse.rows.map((row) => {
-      const sessionMetadata = row.doc;
+      // biome-ignore lint/style/noNonNullAssertion: TODO
+      const sessionMetadata = row.doc!;
       if (!isValidStoredSessionMetadata(sessionMetadata)) {
         console.error("WARNING: Invalid attempt in database!", sessionMetadata);
       }

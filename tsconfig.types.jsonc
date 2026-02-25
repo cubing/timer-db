@@ -1,0 +1,12 @@
+{
+  "schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/types",
+    "noEmit": false,
+    "rootDir": "./src/timer-db/",
+    "skipLibCheck": true // TODO: Workaround for `Buffer` error from `@types/node`.
+  },
+  "include": ["./src/timer-db/"],
+  "exclude": ["**/*.spec.ts", "node_modules"]
+}

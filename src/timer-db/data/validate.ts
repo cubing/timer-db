@@ -1,5 +1,5 @@
-import { StoredAttempt, Attempt } from "./Attempt";
-import { StoredSessionMetadata, SessionMetadata } from "./SessionMetadata";
+import type { Attempt, StoredAttempt } from "./Attempt";
+import type { SessionMetadata, StoredSessionMetadata } from "./SessionMetadata";
 
 export function isValidAttemptData(attempt: Attempt): boolean {
   // We currently only support millisecond results.
@@ -24,7 +24,7 @@ export function isValidStoredAttempt(attempt: StoredAttempt): boolean {
 }
 
 export function isValidSessionMetadata(
-  sessionMetadata: SessionMetadata
+  sessionMetadata: SessionMetadata,
 ): boolean {
   if (!("name" in sessionMetadata)) {
     return false;
@@ -36,7 +36,7 @@ export function isValidSessionMetadata(
 }
 
 export function isValidStoredSessionMetadata(
-  storedSessionMetadata: StoredSessionMetadata
+  storedSessionMetadata: StoredSessionMetadata,
 ): boolean {
   if (!isValidSessionMetadata(storedSessionMetadata)) {
     return false;

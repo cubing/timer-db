@@ -1,18 +1,17 @@
 // https://www.npmjs.com/package/@collectable/red-black-tree
 import {
   fromPairsWithStringKeys,
-  RedBlackTreeStructure,
   iterateFromFirst,
   iterateValuesFromLast,
+  type RedBlackTreeStructure,
   remove,
   set,
   size,
   valueAt,
 } from "@collectable/red-black-tree";
-import { StoredAttempt } from "../data/Attempt";
-import { PouchDBStorage } from "./PouchDBStorage";
-import { AttemptUUID, SessionUUID } from "../UUID";
-import { Storage } from "./storage";
+import type { StoredAttempt } from "../data/Attempt";
+import type { AttemptUUID, SessionUUID } from "../UUID";
+import type { Storage } from "./Storage";
 
 const MIN_SIZE_CAP = 1000;
 const MAX_SIZE_CAP = 1050;
@@ -28,7 +27,7 @@ export class AttemptCache {
     private sessionID: SessionUUID,
     private minSize: number = 100,
     private midSize: number = minSize + 25,
-    private maxSize: number = minSize + 50
+    private maxSize: number = minSize + 50,
   ) {
     if (minSize > midSize || midSize > maxSize) {
       throw new Error("AttemptCache initialized with invalid size parameters.");
@@ -47,7 +46,7 @@ export class AttemptCache {
   async getLatestFromDB(n: number): Promise<RedBlackTree> {
     const attempts: StoredAttempt[] = await this.storage.latestAttempts(
       this.sessionID,
-      n
+      n,
     );
     const pairs: [AttemptUUID, StoredAttempt][] = attempts.map((attempt) => [
       attempt._id,
@@ -56,7 +55,7 @@ export class AttemptCache {
     return fromPairsWithStringKeys<StoredAttempt>(pairs);
   }
 
-  private growToMidSize(tree: RedBlackTree): Promise<RedBlackTree> {
+  private growToMidSize(_tree: RedBlackTree): Promise<RedBlackTree> {
     return this.getLatestFromDB(this.midSize); // TODO: Only get the ones we need.
   }
 
@@ -98,7 +97,7 @@ export class AttemptCache {
   async debugPrint(): Promise<void> {
     const l = [];
     for (const entry of iterateFromFirst<string, StoredAttempt>(
-      await this.latestSolves
+      await this.latestSolves,
     )) {
       l.push([entry.key, entry.value.resultTotalMs]);
     }
@@ -110,7 +109,7 @@ export class AttemptCache {
     const prevLatestSolves = await this.latestSolves;
     this.latestSolves = (async () => {
       return this.maintainSize(
-        set(storedAttempt._id, storedAttempt, prevLatestSolves)
+        set(storedAttempt._id, storedAttempt, prevLatestSolves),
       );
     })();
   }
@@ -132,7 +131,7 @@ export class AttemptCache {
     const l: StoredAttempt[] = [];
     let i = 0;
     const iterator = iterateValuesFromLast<string, StoredAttempt>(
-      await this.latestSolves
+      await this.latestSolves,
     );
     for (const attempt of iterator) {
       l.push(attempt);

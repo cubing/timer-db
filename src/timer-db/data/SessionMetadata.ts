@@ -1,4 +1,4 @@
-import { SessionUUID } from "../UUID";
+import type { SessionUUID } from "../UUID";
 
 export interface SessionMetadata {
   name: string;

@@ -1,21 +1,57 @@
-# This Makefile is a wrapper around the scripts from `package.json`.
-# https://github.com/lgarron/Makefile-scripts
+.PHONY: build
+build: build-js build-types
 
-# Note: the first command becomes the default `make` target.
-NPM_COMMANDS = build build-types dev clean prepack
+.PHONY: build-js
+build-js:
+	bun run -- script/build.ts build-types
 
-.PHONY: $(NPM_COMMANDS)
-$(NPM_COMMANDS):
-	npm run $@
+.PHONY: build-types
+build-types:
+	bun x -- bun-dx --package @typescript/native-preview tsgo -- --project ./tsconfig.types.jsonc
 
-# We write the npm commands to the top of the file above to make shell autocompletion work in more places.
-DYNAMIC_NPM_COMMANDS = $(shell node -e 'console.log(Object.keys(require("./package.json").scripts).join(" "))')
-UPDATE_MAKEFILE_SED_ARGS = "s/^NPM_COMMANDS = .*$$/NPM_COMMANDS = ${DYNAMIC_NPM_COMMANDS}/" Makefile
-.PHONY: update-Makefile
-update-Makefile:
-	if [ "$(shell uname -s)" = "Darwin" ] ; then sed -i "" ${UPDATE_MAKEFILE_SED_ARGS} ; fi
-	if [ "$(shell uname -s)" != "Darwin" ] ; then sed -i"" ${UPDATE_MAKEFILE_SED_ARGS} ; fi
+.PHONY: check
+check: lint test build check-package.json
 
-.PHONY: publish
-publish:
-	npm publish
+.PHONY: test
+test:
+	bun test
+
+.PHONY: setup
+setup:
+	bun install --frozen-lockfile	
+
+.PHONY: dev
+dev: setup
+	bun run -- ./script/dev.ts
+
+.PHONY: lint
+lint: lint-biome lint-typescript
+
+.PHONY: lint-biome
+lint-biome:
+	bun x -- bun-dx --package @biomejs/biome biome -- check
+
+.PHONY: lint-typescript
+lint-typescript:
+	bun x -- bun-dx --package @typescript/native-preview tsgo -- --project ./tsconfig.json
+
+.PHONY: format
+format:
+	bun x -- bun-dx --package @biomejs/biome biome -- check --write
+
+.PHONY: check-package.json
+check-package.json: build
+	bun x -- bun-dx --package @cubing/dev-config package.json -- check
+
+.PHONY: prepublishOnly
+prepublishOnly: clean check build
+
+RM_RF = bun -e 'process.argv.slice(1).map(p => process.getBuiltinModule("node:fs").rmSync(p, {recursive: true, force: true, maxRetries: 5}))' --
+
+.PHONY: clean
+clean:
+	${RM_RF} ./dist/
+
+.PHONY: reset
+reset: clean
+	${RM_RF} ./node_modules/

@@ -1,4 +1,6 @@
-import { StoredAttempt } from "../data/Attempt";
+import { expect, test } from "bun:test";
+import assert from "node:assert";
+import type { StoredAttempt } from "../data/Attempt";
 import { newAttemptUUID } from "../UUID";
 import { AttemptCache } from "./AttemptCache";
 import { PouchDBStorage } from "./PouchDBStorage";
@@ -7,8 +9,8 @@ import { PouchDBStorage } from "./PouchDBStorage";
 async function fakeAttempt(k: number): Promise<StoredAttempt> {
   const date = 10000000000 + k;
   return {
-    _id: await newAttemptUUID(date),
-    _rev: null, // TODO
+    _id: newAttemptUUID(date),
+    _rev: "", // TODO
     resultTotalMs: 100 + k,
     unixDate: date,
   };
@@ -22,7 +24,9 @@ test("should construct", async () => {
       await cache.set(await fakeAttempt(4));
       await cache.set(await fakeAttempt(1));
       await cache.set(await fakeAttempt(7));
-      return (await cache.kthMostRecent(1)).resultTotalMs;
-    })()
+      const mostRecent = await cache.kthMostRecent(1);
+      assert.ok(mostRecent);
+      return mostRecent.resultTotalMs;
+    })(),
   ).resolves.toBe(104);
 });

@@ -1,62 +1,32 @@
 import type { Session } from "../timer-db";
+import {
+  LOCALSTORAGE_KEY_FOR_TIMER_DB_PASSWORD,
+  LOCALSTORAGE_KEY_FOR_TIMER_DB_USERNAME,
+} from "../timer-db/storage/PouchDBStorage";
 
-window.addEventListener("DOMContentLoaded", async () => {
+globalThis.addEventListener("DOMContentLoaded", async () => {
   const { TimerDB } = await import("../timer-db");
 
   const db = new TimerDB();
-  (window as any).db = db;
+  // biome-ignore lint/suspicious/noExplicitAny: For debugging.
+  (globalThis as any).db = db;
 
   const timerDB = new TimerDB();
   timerDB.startSync({
-    username: localStorage["timerDBUsername"],
-    password: localStorage["timerDBPassword"],
+    username: localStorage[LOCALSTORAGE_KEY_FOR_TIMER_DB_USERNAME],
+    password: localStorage[LOCALSTORAGE_KEY_FOR_TIMER_DB_PASSWORD],
   });
   const sessions = await timerDB.getSessions();
   const s: Session =
     sessions[0] ?? (await timerDB.createSession("My 4x4x4 Solves", "4x4x4"));
   s.addStatListener(console.log);
-  // s.add({
-  //   resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
-  //   unixDate: Date.now(),
-  // });
 
-  // const stubSesh = await timerDB.createSession("3x3x3 sesh!", "333", {
-  //   stub: true,
-  // });
-  // stubSesh.add({
-  //   resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
-  //   unixDate: Date.now(),
-  // });
-  // console.log(stubSesh);
-
-  // const s = (await db.listSessions())[0];
-
-  // s.addStatListener(console.log);
-
-  // s.add({
-  //   resultTotalMs: 8000 + Math.floor(Math.random() * 4000),
-  //   unixDate: Date.now(),
-  // });
-
-  // s.add(s.debugMakeAttempt(10));
-
-  // s.add(s.debugMakeAttempt(9));
-  // s.add(s.debugMakeAttempt(5));
-  // s.add(s.debugMakeAttempt(12));
+  if ((await s.nMostRecent(3)).length < 3) {
+    await s.add({
+      resultTotalMs: Math.floor(5000 + 10000 * Math.random()),
+      unixDate: Date.now(),
+    });
+  }
 
   console.log(await s.nMostRecent(10));
-
-  // const p = await s.debugPouch();
-  // console.log(await p.latestAttempts(s._id, 100));
-
-  // // const c = await s.debugCache();
-  // (window as any).s = s;
-  // (window as any).c = c;
-  // (window as any).p = p;
-
-  // const a = await c.kthMostRecent(0);
-  // console.log(a);
-  // a.resultTotalMs += 1;
-  // delete a.penalties;
-  // s.update(a);
 });

@@ -1,11 +1,11 @@
 // This should be a `.d.ts` file, but we need to make it `.ts` (or Parcel won't include it in the output).
 
-import { StoredAttempt, Attempt } from "../data/Attempt";
-import {
+import type { Attempt, StoredAttempt } from "../data/Attempt";
+import type {
   SessionMetadata,
   StoredSessionMetadata,
 } from "../data/SessionMetadata";
-import { SessionUUID } from "../UUID";
+import type { SessionUUID } from "../UUID";
 
 export type SyncChangeListener = (attempt: StoredAttempt[]) => void;
 
@@ -14,7 +14,7 @@ export declare interface Storage {
 
   // Sessions
   createSession(
-    sessionMetadata: SessionMetadata
+    sessionMetadata: SessionMetadata,
   ): Promise<StoredSessionMetadata>;
   getAllSessions(): Promise<StoredSessionMetadata[]>;
 

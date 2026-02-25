@@ -1,11 +1,14 @@
-import { Attempt } from "./data/Attempt";
+import type { AttemptWithResultTotalMs } from "./data/Attempt";
 
-function compareNumbers(a: Attempt, b: Attempt): number {
+function compareNumbers(
+  a: AttemptWithResultTotalMs,
+  b: AttemptWithResultTotalMs,
+): number {
   return a.resultTotalMs - b.resultTotalMs;
 }
 
 // TODO: handle DNFs
-export function mean(attempts: Attempt[]): number | null {
+export function mean(attempts: AttemptWithResultTotalMs[]): number | null {
   if (attempts.length < 1) {
     return null;
   }
@@ -18,7 +21,9 @@ export function mean(attempts: Attempt[]): number | null {
 
 // TODO: handle incomplete avg (e.g. 4 attempts for an avg of 5).
 // TODO: handle DNFs
-export function trimmedAverage(attempts: Attempt[]): number | null {
+export function trimmedAverage(
+  attempts: AttemptWithResultTotalMs[],
+): number | null {
   if (attempts.length < 3) {
     return null;
   }
@@ -31,30 +36,24 @@ export function trimmedAverage(attempts: Attempt[]): number | null {
 }
 
 // TODO: handle DNFs
-export function best(attempts: Attempt[]): number | null {
+export function best(attempts: AttemptWithResultTotalMs[]): number | null {
   if (attempts.length < 1) {
     return null;
   }
-  return Math.min.apply(
-    this,
-    attempts.map((attempt) => attempt.resultTotalMs)
-  );
+  return Math.min(...attempts.map((attempt) => attempt.resultTotalMs));
 }
 
 // TODO: handle DNF
-export function worst(attempts: Attempt[]): number | null {
+export function worst(attempts: AttemptWithResultTotalMs[]): number | null {
   if (attempts.length < 1) {
     return null;
   }
-  return Math.max.apply(
-    this,
-    attempts.map((attempt) => attempt.resultTotalMs)
-  );
+  return Math.max(...attempts.map((attempt) => attempt.resultTotalMs));
 }
 
 export function formatTime(
-  attempt: Attempt,
-  decimalDigits: 0 | 1 | 2 | 3 = 2
+  attempt: AttemptWithResultTotalMs,
+  decimalDigits: 0 | 1 | 2 | 3 = 2,
 ): string {
   var hours = Math.floor(attempt.resultTotalMs / (60 * 60 * 1000));
   var minutes = Math.floor(attempt.resultTotalMs / (60 * 1000)) % 60;
@@ -70,7 +69,7 @@ export function formatTime(
     ].join(":");
   } else if (minutes > 0) {
     preDecimal = [minutes.toString(), seconds.toString().padStart(2, "0")].join(
-      ":"
+      ":",
     );
   } else {
     preDecimal = seconds.toString();
