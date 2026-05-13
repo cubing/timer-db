@@ -10,7 +10,6 @@ await build({
   outdir: "./dist/esm",
   bundle: true,
   splitting: true,
-  external: ["crypto"],
   banner: {
     js: `globalThis.global = globalThis;`, // Workaround for some silly `pouchdb` dep.
   },
