@@ -40,8 +40,8 @@ export class PouchDBStorage {
     // });
   }
 
-  connectRemoteDB(username: string, password: string): void {
-    const url = new URL(DB_URL);
+  connectRemoteDB(username: string, password: string, options?: {dbURL: string} ): void {
+    const url = options === null ? new URL(DB_URL) : new URL(options.dbURL)
     url.username = username;
     url.password = password;
     url.pathname = `results-${localStorage[LOCALSTORAGE_KEY_FOR_TIMER_DB_USERNAME]}`;
